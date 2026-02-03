@@ -23,7 +23,17 @@ function getActivities() {
 }
 
 function saveActivities(activities) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
+        return true;
+    } catch (e) {
+        if (e.name === 'QuotaExceededError') {
+            alert('存储空间不足！请尝试删除一些活动或减少图片数量/尺寸。');
+        } else {
+            alert('保存失败：' + e.message);
+        }
+        return false;
+    }
 }
 
 function getActivityById(id) {
@@ -155,7 +165,12 @@ function renderPrizes() {
                 <div class="form-group">
                     <label>奖品图片</label>
                     <input type="file" accept="image/*" onchange="updatePrizeImage(${index}, event)">
-                    ${prize.image ? `<img src="${prize.image}" class="prize-image-preview">` : ''}
+                    ${prize.image ? `
+                        <div style="margin-top: 8px;">
+                            <img src="${prize.image}" class="prize-image-preview">
+                            <button class="btn btn-small" onclick="removePrizeImage(${index})" style="margin-left: 10px;">移除图片</button>
+                        </div>
+                    ` : ''}
                 </div>
             </div>
         </div>
@@ -181,16 +196,64 @@ function updatePrize(index, field, value) {
     currentActivity.prizes[index][field] = value;
 }
 
+function removePrizeImage(index) {
+    currentActivity.prizes[index].image = '';
+    renderPrizes();
+}
+
 function updatePrizeImage(index, event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        currentActivity.prizes[index].image = e.target.result;
+    // 压缩图片后再存储
+    compressImage(file, 300, 0.7).then(compressedDataUrl => {
+        currentActivity.prizes[index].image = compressedDataUrl;
         renderPrizes();
-    };
-    reader.readAsDataURL(file);
+    }).catch(err => {
+        alert('图片处理失败：' + err.message);
+    });
+}
+
+// 图片压缩函数
+function compressImage(file, maxSize, quality) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // 计算缩放比例
+                if (width > height) {
+                    if (width > maxSize) {
+                        height = Math.round((height * maxSize) / width);
+                        width = maxSize;
+                    }
+                } else {
+                    if (height > maxSize) {
+                        width = Math.round((width * maxSize) / height);
+                        height = maxSize;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // 转换为压缩后的 base64
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(compressedDataUrl);
+            };
+            img.onerror = () => reject(new Error('图片加载失败'));
+            img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('文件读取失败'));
+        reader.readAsDataURL(file);
+    });
 }
 
 // ==================== 参与人员管理 ====================
@@ -322,8 +385,9 @@ function saveActivity() {
         activities.push(currentActivity);
     }
 
-    saveActivities(activities);
-    alert('保存成功！');
+    if (saveActivities(activities)) {
+        alert('保存成功！');
+    }
 }
 
 function exportActivityConfig() {
@@ -404,7 +468,10 @@ function startLottery() {
     } else {
         activities.push(currentActivity);
     }
-    saveActivities(activities);
+
+    if (!saveActivities(activities)) {
+        return; // 保存失败时不继续
+    }
 
     enterLotteryPage();
 }
