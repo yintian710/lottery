@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽奖系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 首页 - 活动列表 -->
+        <div id="home-page" class="page active">
+            <div class="header">
+                <h1>🎯 抽奖活动管理</h1>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="createNewActivity()">创建新活动</button>
+                <label class="btn btn-secondary">
+                    导入活动配置
+                    <input type="file" accept=".json" onchange="importActivityConfig(event)" hidden>
+                </label>
+            </div>
+            <div id="activity-list" class="activity-list">
+                <!-- 活动列表将在这里动态生成 -->
+            </div>
+        </div>
+
+        <!-- 活动编辑页面 -->
+        <div id="edit-page" class="page">
+            <div class="header">
+                <button class="btn btn-back" onclick="goToHome()">← 返回</button>
+                <h1 id="edit-title">创建活动</h1>
+            </div>
+
+            <div class="edit-container">
+                <div class="form-section">
+                    <h2>活动基本信息</h2>
+                    <div class="form-group">
+                        <label>活动名称</label>
+                        <input type="text" id="activity-name" placeholder="请输入活动名称">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>奖品设置</h2>
+                    <div id="prizes-container">
+                        <!-- 奖品列表将在这里动态生成 -->
+                    </div>
+                    <button class="btn btn-secondary" onclick="addPrize()">+ 添加奖品</button>
+                </div>
+
+                <div class="form-section">
+                    <h2>参与人员管理</h2>
+                    <div class="participant-actions">
+                        <label class="btn btn-secondary">
+                            导入名单 (CSV)
+                            <input type="file" accept=".csv,.txt" onchange="importParticipants(event)" hidden>
+                        </label>
+                        <button class="btn btn-secondary" onclick="exportParticipants()">导出名单</button>
+                        <button class="btn btn-secondary" onclick="showParticipantManager()">人员管理</button>
+                    </div>
+                    <div class="participant-count">
+                        当前参与人数: <span id="participant-count">0</span> 人
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>活动设置</h2>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="blacklist-winners" checked>
+                            中奖后自动拉黑（本次活动不可再中奖）
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveActivity()">保存活动</button>
+                    <button class="btn btn-secondary" onclick="exportActivityConfig()">导出配置</button>
+                    <button class="btn btn-success" onclick="startLottery()" id="start-lottery-btn">开始抽奖</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 人员管理弹窗 -->
+        <div id="participant-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>人员管理</h2>
+                    <button class="modal-close" onclick="closeParticipantModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="participant-input">
+                        <input type="text" id="new-participant" placeholder="输入姓名添加">
+                        <button class="btn btn-primary" onclick="addParticipant()">添加</button>
+                    </div>
+                    <div id="participant-list" class="participant-list">
+                        <!-- 人员列表将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 抽奖页面 -->
+        <div id="lottery-page" class="page">
+            <div class="header">
+                <button class="btn btn-back" onclick="exitLottery()">← 退出抽奖</button>
+                <h1 id="lottery-title">抽奖</h1>
+            </div>
+
+            <div class="lottery-container">
+                <div class="prize-selector">
+                    <label>选择奖品:</label>
+                    <select id="prize-select" onchange="selectPrize()">
+                        <!-- 奖品选项将在这里动态生成 -->
+                    </select>
+                    <span id="prize-remaining"></span>
+                </div>
+
+                <div class="prize-display">
+                    <div id="prize-image-container" class="prize-image-container">
+                        <!-- 奖品图片 -->
+                    </div>
+                    <h2 id="prize-name-display">请选择奖品</h2>
+                </div>
+
+                <div class="lottery-display">
+                    <div id="lottery-names" class="lottery-names">
+                        <!-- 抽奖名字显示区域 -->
+                    </div>
+                </div>
+
+                <div class="lottery-actions">
+                    <button class="btn btn-primary btn-large" id="draw-all-btn" onclick="drawAll()" disabled>抽全部</button>
+                    <button class="btn btn-secondary btn-large" id="draw-one-btn" onclick="drawOne()" disabled>抽一个</button>
+                    <button class="btn btn-danger btn-large" id="stop-btn" onclick="stopDraw()" style="display: none;">停止</button>
+                </div>
+
+                <div id="winners-display" class="winners-display" style="display: none;">
+                    <h3>🎉 中奖名单</h3>
+                    <div id="current-winners"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中奖名单页面 -->
+        <div id="winners-page" class="page">
+            <div class="header">
+                <button class="btn btn-back" onclick="goToHome()">← 返回</button>
+                <h1>中奖名单</h1>
+            </div>
+
+            <div class="winners-container">
+                <div class="winners-actions">
+                    <button class="btn btn-secondary" onclick="exportWinners()">导出名单 (CSV)</button>
+                    <button class="btn btn-danger" onclick="clearWinners()">清空名单</button>
+                </div>
+                <div id="all-winners-list" class="all-winners-list">
+                    <!-- 所有中奖名单将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
