@@ -517,6 +517,70 @@ body {
     font-weight: bold;
 }
 
+/* 抽奖页面已中奖汇总 */
+.lottery-winners-summary {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.lottery-winners-summary h3 {
+    color: #00b894;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.lottery-winners-summary .prize-winner-group {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.lottery-winners-summary .prize-winner-group:last-child {
+    margin-bottom: 0;
+}
+
+.lottery-winners-summary .prize-winner-title {
+    color: #e94560;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lottery-winners-summary .prize-winner-title img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.lottery-winners-summary .winner-names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lottery-winners-summary .winner-name {
+    padding: 4px 12px;
+    background: rgba(0, 184, 148, 0.2);
+    border: 1px solid #00b894;
+    color: #00b894;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.lottery-winners-summary .empty-hint {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+}
+
 /* 中奖名单页面 */
 .winners-container {
     display: grid;

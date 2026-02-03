@@ -514,7 +514,43 @@ function enterLotteryPage() {
     document.getElementById('draw-all-btn').disabled = true;
     document.getElementById('draw-one-btn').disabled = true;
 
+    // 渲染已中奖名单汇总
+    renderLotteryWinnersSummary();
+
     showPage('lottery-page');
+}
+
+// 渲染抽奖页面的已中奖名单汇总
+function renderLotteryWinnersSummary() {
+    const container = document.getElementById('lottery-winners-list');
+    const winners = currentActivity.winners || {};
+
+    // 检查是否有中奖记录
+    const hasWinners = currentActivity.prizes.some(prize =>
+        (winners[prize.id] || []).length > 0
+    );
+
+    if (!hasWinners) {
+        container.innerHTML = '<div class="empty-hint">暂无中奖记录</div>';
+        return;
+    }
+
+    container.innerHTML = currentActivity.prizes.map(prize => {
+        const prizeWinners = winners[prize.id] || [];
+        if (prizeWinners.length === 0) return '';
+
+        return `
+            <div class="prize-winner-group">
+                <div class="prize-winner-title">
+                    ${prize.image ? `<img src="${prize.image}" alt="">` : ''}
+                    <span>${escapeHtml(prize.name)} (${prizeWinners.length}/${prize.count})</span>
+                </div>
+                <div class="winner-names">
+                    ${prizeWinners.map(w => `<span class="winner-name">${escapeHtml(w)}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 function selectPrize() {
@@ -652,6 +688,9 @@ function stopDraw() {
 
         // 刷新奖品选择器
         selectPrize();
+
+        // 更新已中奖名单汇总
+        renderLotteryWinnersSummary();
     }, 500);
 }
 
