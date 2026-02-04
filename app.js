@@ -793,12 +793,17 @@ function selectPrize() {
     const select = document.getElementById('prize-select');
     const index = parseInt(select.value);
 
+    const customInput = document.getElementById('draw-custom-count');
+    const customBtn = document.getElementById('draw-custom-btn');
+
     if (isNaN(index)) {
         document.getElementById('prize-image-container').innerHTML = '';
         document.getElementById('prize-name-display').textContent = '请选择奖品';
         document.getElementById('prize-remaining').textContent = '';
         document.getElementById('draw-all-btn').disabled = true;
         document.getElementById('draw-one-btn').disabled = true;
+        customInput.disabled = true;
+        customBtn.disabled = true;
         return;
     }
 
@@ -824,10 +829,17 @@ function selectPrize() {
 
     // 检查是否可以抽奖
     const availableParticipants = getAvailableParticipants();
-    const canDraw = remaining > 0 && availableParticipants.length > 0;
+    const maxDraw = Math.min(remaining, availableParticipants.length);
+    const canDraw = maxDraw > 0;
 
     document.getElementById('draw-all-btn').disabled = !canDraw;
     document.getElementById('draw-one-btn').disabled = !canDraw;
+
+    // 设置自定义抽奖输入框
+    customInput.disabled = !canDraw;
+    customBtn.disabled = !canDraw;
+    customInput.max = maxDraw;
+    customInput.value = Math.min(parseInt(customInput.value) || 1, maxDraw);
 }
 
 function getAvailableParticipants() {
@@ -852,6 +864,25 @@ function drawAll() {
     startDrawing(remaining);
 }
 
+function drawCustom() {
+    const customInput = document.getElementById('draw-custom-count');
+    const count = parseInt(customInput.value) || 1;
+    const max = parseInt(customInput.max) || 1;
+
+    if (count < 1) {
+        alert('请输入有效的数量');
+        return;
+    }
+
+    if (count > max) {
+        alert(`最多只能抽 ${max} 个`);
+        customInput.value = max;
+        return;
+    }
+
+    startDrawing(count);
+}
+
 function startDrawing(count) {
     const availableParticipants = getAvailableParticipants();
 
@@ -867,11 +898,17 @@ function startDrawing(count) {
     // 隐藏抽奖按钮，显示停止按钮
     document.getElementById('draw-all-btn').style.display = 'none';
     document.getElementById('draw-one-btn').style.display = 'none';
+    document.querySelector('.draw-custom').style.display = 'none';
     document.getElementById('stop-btn').style.display = 'inline-flex';
     document.getElementById('winners-display').style.display = 'none';
 
+    // 计算最长名字的宽度
+    const longestName = availableParticipants.reduce((a, b) => a.length > b.length ? a : b, '');
+    const nameWidth = Math.max(longestName.length * 28 + 40, 120); // 每个字约28px + padding
+
     // 创建名字显示元素
     const namesContainer = document.getElementById('lottery-names');
+    namesContainer.style.setProperty('--name-width', `${nameWidth}px`);
     namesContainer.innerHTML = '';
     for (let i = 0; i < currentDrawCount; i++) {
         const nameEl = document.createElement('div');
@@ -921,6 +958,7 @@ function stopDraw() {
         document.getElementById('stop-btn').style.display = 'none';
         document.getElementById('draw-all-btn').style.display = 'inline-flex';
         document.getElementById('draw-one-btn').style.display = 'inline-flex';
+        document.querySelector('.draw-custom').style.display = 'flex';
 
         // 刷新奖品选择器
         selectPrize();
