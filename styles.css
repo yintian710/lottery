@@ -576,7 +576,8 @@ body {
 
 .lottery-names {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--name-width, 120px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--name-width, 120px), var(--name-width, 120px)));
+    justify-content: center;
     gap: 15px;
     width: 100%;
     font-size: 28px;

@@ -745,7 +745,7 @@ function enterLotteryPage() {
     document.getElementById('prize-image-container').innerHTML = '';
     document.getElementById('prize-name-display').textContent = '请选择奖品';
     document.getElementById('prize-remaining').textContent = '';
-    document.getElementById('lottery-names').innerHTML = '';
+    clearNameSlots();
     document.getElementById('winners-display').style.display = 'none';
     document.getElementById('draw-all-btn').disabled = true;
     document.getElementById('draw-one-btn').disabled = true;
@@ -824,7 +824,7 @@ function selectPrize() {
     }
 
     // 重置中奖显示
-    document.getElementById('lottery-names').innerHTML = '';
+    clearNameSlots();
     document.getElementById('winners-display').style.display = 'none';
 
     // 检查是否可以抽奖
@@ -840,6 +840,15 @@ function selectPrize() {
     customBtn.disabled = !canDraw;
     customInput.max = maxDraw;
     customInput.value = Math.min(parseInt(customInput.value) || 1, maxDraw);
+}
+
+function clearNameSlots() {
+    const namesContainer = document.getElementById('lottery-names');
+    Array.from(namesContainer.children).forEach((nameEl) => {
+        nameEl.textContent = '';
+        nameEl.style.display = 'none';
+        nameEl.classList.remove('winner');
+    });
 }
 
 function getAvailableParticipants() {
@@ -909,20 +918,31 @@ function startDrawing(count) {
     // 创建名字显示元素
     const namesContainer = document.getElementById('lottery-names');
     namesContainer.style.setProperty('--name-width', `${nameWidth}px`);
-    namesContainer.innerHTML = '';
-    for (let i = 0; i < currentDrawCount; i++) {
+    const existingCount = namesContainer.children.length;
+    for (let i = existingCount; i < currentDrawCount; i++) {
         const nameEl = document.createElement('div');
         nameEl.className = 'lottery-name';
         nameEl.id = `lottery-name-${i}`;
         namesContainer.appendChild(nameEl);
     }
+    Array.from(namesContainer.children).forEach((nameEl, index) => {
+        nameEl.classList.remove('winner');
+        if (index < currentDrawCount) {
+            nameEl.style.display = '';
+            nameEl.textContent = '';
+        } else {
+            nameEl.style.display = 'none';
+            nameEl.textContent = '';
+        }
+    });
+    const activeNameEls = Array.from(namesContainer.children).slice(0, currentDrawCount);
 
     // 开始闪烁动画
     drawInterval = setInterval(() => {
         const available = getAvailableParticipants();
         for (let i = 0; i < currentDrawCount; i++) {
             const randomIndex = Math.floor(Math.random() * available.length);
-            document.getElementById(`lottery-name-${i}`).textContent = available[randomIndex];
+            activeNameEls[i].textContent = available[randomIndex];
         }
     }, 50);
 }
