@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>抽奖系统</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- SheetJS for Excel support -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <div id="app">
@@ -53,8 +55,12 @@
                     <h2>参与人员管理</h2>
                     <div class="participant-actions">
                         <label class="btn btn-secondary">
-                            导入名单 (CSV)
+                            导入 CSV
                             <input type="file" accept=".csv,.txt" onchange="importParticipants(event)" hidden>
+                        </label>
+                        <label class="btn btn-secondary">
+                            导入 Excel
+                            <input type="file" accept=".xlsx,.xls" onchange="importExcel(event)" hidden>
                         </label>
                         <button class="btn btn-secondary" onclick="exportParticipants()">导出名单</button>
                         <button class="btn btn-secondary" onclick="showParticipantManager()">人员管理</button>
@@ -84,18 +90,51 @@
 
         <!-- 人员管理弹窗 -->
         <div id="participant-modal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content modal-large">
                 <div class="modal-header">
                     <h2>人员管理</h2>
                     <button class="modal-close" onclick="closeParticipantModal()">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="participant-input">
-                        <input type="text" id="new-participant" placeholder="输入姓名添加">
+                        <input type="text" id="new-participant" placeholder="输入姓名添加" onkeypress="if(event.key==='Enter')addParticipant()">
                         <button class="btn btn-primary" onclick="addParticipant()">添加</button>
+                    </div>
+                    <div class="participant-toolbar">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="select-all-participants" onchange="toggleSelectAll()">
+                            全选
+                        </label>
+                        <span id="selected-count">已选择 0 人</span>
+                        <button class="btn btn-danger btn-small" onclick="deleteSelectedParticipants()" id="delete-selected-btn" disabled>删除选中</button>
                     </div>
                     <div id="participant-list" class="participant-list">
                         <!-- 人员列表将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Excel导入确认弹窗 -->
+        <div id="excel-import-modal" class="modal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>导入 Excel 名单</h2>
+                    <button class="modal-close" onclick="closeExcelImportModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="excel-sheet-selector">
+                        <label>选择工作表:</label>
+                        <select id="excel-sheet-select" onchange="selectExcelSheet()">
+                        </select>
+                    </div>
+                    <div id="excel-import-info" class="excel-import-info"></div>
+                    <div id="excel-preview-list" class="excel-preview-list">
+                        <!-- Excel 预览列表 -->
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" onclick="closeExcelImportModal()">取消</button>
+                        <button class="btn btn-primary" onclick="confirmExcelImport()" id="confirm-excel-import-btn">确认导入</button>
                     </div>
                 </div>
             </div>

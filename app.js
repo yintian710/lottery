@@ -288,6 +288,194 @@ function importParticipants(event) {
     event.target.value = '';
 }
 
+// Excel 导入相关
+let excelData = null; // 存储解析后的 Excel 数据
+
+function importExcel(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            // 解析所有 sheet
+            excelData = {
+                sheetNames: workbook.SheetNames,
+                sheets: {}
+            };
+
+            workbook.SheetNames.forEach(sheetName => {
+                const sheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // 查找第一行中"姓名"所在的列
+                if (jsonData.length > 0) {
+                    const headerRow = jsonData[0];
+                    let nameColIndex = -1;
+
+                    for (let i = 0; i < headerRow.length; i++) {
+                        const cell = String(headerRow[i] || '').trim();
+                        if (cell === '姓名') {
+                            nameColIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (nameColIndex >= 0) {
+                        // 提取该列的所有名字（跳过表头）
+                        const names = [];
+                        for (let i = 1; i < jsonData.length; i++) {
+                            const name = String(jsonData[i][nameColIndex] || '').trim();
+                            if (name) {
+                                names.push(name);
+                            }
+                        }
+                        excelData.sheets[sheetName] = {
+                            hasNameColumn: true,
+                            names: names
+                        };
+                    } else {
+                        excelData.sheets[sheetName] = {
+                            hasNameColumn: false,
+                            names: []
+                        };
+                    }
+                } else {
+                    excelData.sheets[sheetName] = {
+                        hasNameColumn: false,
+                        names: []
+                    };
+                }
+            });
+
+            // 显示导入确认弹窗
+            showExcelImportModal();
+        } catch (err) {
+            alert('Excel 解析失败：' + err.message);
+        }
+    };
+    reader.readAsArrayBuffer(file);
+    event.target.value = '';
+}
+
+function showExcelImportModal() {
+    if (!excelData || excelData.sheetNames.length === 0) {
+        alert('Excel 文件为空或无法解析');
+        return;
+    }
+
+    // 填充 sheet 选择器
+    const select = document.getElementById('excel-sheet-select');
+    select.innerHTML = excelData.sheetNames.map((name, index) => {
+        const sheetInfo = excelData.sheets[name];
+        const status = sheetInfo.hasNameColumn ? `(${sheetInfo.names.length} 人)` : '(无姓名列)';
+        return `<option value="${index}">${escapeHtml(name)} ${status}</option>`;
+    }).join('');
+
+    // 显示第一个 sheet 的预览
+    selectExcelSheet();
+
+    document.getElementById('excel-import-modal').classList.add('active');
+}
+
+function closeExcelImportModal() {
+    document.getElementById('excel-import-modal').classList.remove('active');
+    excelData = null;
+}
+
+function selectExcelSheet() {
+    const select = document.getElementById('excel-sheet-select');
+    const sheetIndex = parseInt(select.value);
+    const sheetName = excelData.sheetNames[sheetIndex];
+    const sheetInfo = excelData.sheets[sheetName];
+
+    const infoContainer = document.getElementById('excel-import-info');
+    const previewContainer = document.getElementById('excel-preview-list');
+    const confirmBtn = document.getElementById('confirm-excel-import-btn');
+
+    if (!sheetInfo.hasNameColumn) {
+        infoContainer.innerHTML = '<div class="warning">该工作表第一行没有找到"姓名"列</div>';
+        previewContainer.innerHTML = '<div class="empty-state"><p>无可导入的数据</p></div>';
+        confirmBtn.disabled = true;
+        return;
+    }
+
+    // 检查重复
+    const names = sheetInfo.names;
+    const existingSet = new Set(currentActivity.participants);
+    const nameCount = {};
+    const duplicatesInFile = [];
+    const duplicatesWithExisting = [];
+
+    names.forEach(name => {
+        nameCount[name] = (nameCount[name] || 0) + 1;
+        if (nameCount[name] === 2) {
+            duplicatesInFile.push(name);
+        }
+        if (existingSet.has(name) && !duplicatesWithExisting.includes(name)) {
+            duplicatesWithExisting.push(name);
+        }
+    });
+
+    // 去重后的名单
+    const uniqueNames = [...new Set(names)];
+    const newNames = uniqueNames.filter(name => !existingSet.has(name));
+
+    // 显示信息
+    let infoHtml = '<div class="info-row">';
+    infoHtml += `<span>总计: ${names.length} 人</span>`;
+    infoHtml += `<span>去重后: ${uniqueNames.length} 人</span>`;
+    infoHtml += `<span class="success">新增: ${newNames.length} 人</span>`;
+    infoHtml += '</div>';
+
+    if (duplicatesInFile.length > 0) {
+        infoHtml += `<div class="info-row warning">文件内重复: ${duplicatesInFile.join('、')}</div>`;
+    }
+    if (duplicatesWithExisting.length > 0) {
+        infoHtml += `<div class="info-row warning">与现有名单重复: ${duplicatesWithExisting.join('、')}</div>`;
+    }
+
+    infoContainer.innerHTML = infoHtml;
+
+    // 显示预览列表
+    previewContainer.innerHTML = uniqueNames.map(name => {
+        const isDupInFile = duplicatesInFile.includes(name);
+        const isDupWithExisting = duplicatesWithExisting.includes(name);
+        const isDup = isDupInFile || isDupWithExisting;
+
+        let badge = '';
+        if (isDupWithExisting) {
+            badge = '<span class="dup-badge">已存在</span>';
+        } else if (isDupInFile) {
+            badge = '<span class="dup-badge">文件内重复</span>';
+        }
+
+        return `<div class="preview-item ${isDup ? 'duplicate' : ''}">${escapeHtml(name)}${badge}</div>`;
+    }).join('');
+
+    confirmBtn.disabled = newNames.length === 0;
+
+    // 存储待导入的数据
+    excelData.pendingImport = newNames;
+}
+
+function confirmExcelImport() {
+    if (!excelData || !excelData.pendingImport || excelData.pendingImport.length === 0) {
+        alert('没有可导入的数据');
+        return;
+    }
+
+    const newNames = excelData.pendingImport;
+    currentActivity.participants.push(...newNames);
+
+    updateParticipantCount();
+    closeExcelImportModal();
+    alert(`成功导入 ${newNames.length} 人`);
+}
+
 function exportParticipants() {
     if (currentActivity.participants.length === 0) {
         alert('没有参与人员可导出');
@@ -311,6 +499,11 @@ function renderParticipantList() {
     const container = document.getElementById('participant-list');
     const blacklist = currentActivity.blacklist || [];
 
+    // 重置全选和选中计数
+    const selectAllCheckbox = document.getElementById('select-all-participants');
+    if (selectAllCheckbox) selectAllCheckbox.checked = false;
+    updateSelectedCount();
+
     if (currentActivity.participants.length === 0) {
         container.innerHTML = '<div class="empty-state"><p>暂无参与人员</p></div>';
         return;
@@ -320,11 +513,54 @@ function renderParticipantList() {
         const isBlacklisted = blacklist.includes(name);
         return `
             <div class="participant-item ${isBlacklisted ? 'blacklisted' : ''}">
-                <span>${escapeHtml(name)} ${isBlacklisted ? '(已中奖)' : ''}</span>
+                <div class="participant-left">
+                    <input type="checkbox" class="participant-checkbox" data-index="${index}" onchange="updateSelectedCount()">
+                    <span>${escapeHtml(name)} ${isBlacklisted ? '(已中奖)' : ''}</span>
+                </div>
                 <button class="btn btn-danger btn-small" onclick="removeParticipant(${index})">删除</button>
             </div>
         `;
     }).join('');
+}
+
+// 全选/取消全选
+function toggleSelectAll() {
+    const selectAll = document.getElementById('select-all-participants').checked;
+    document.querySelectorAll('.participant-checkbox').forEach(cb => {
+        cb.checked = selectAll;
+    });
+    updateSelectedCount();
+}
+
+// 更新选中计数
+function updateSelectedCount() {
+    const checkboxes = document.querySelectorAll('.participant-checkbox:checked');
+    const count = checkboxes.length;
+    const countEl = document.getElementById('selected-count');
+    const deleteBtn = document.getElementById('delete-selected-btn');
+
+    if (countEl) countEl.textContent = `已选择 ${count} 人`;
+    if (deleteBtn) deleteBtn.disabled = count === 0;
+}
+
+// 删除选中的人员
+function deleteSelectedParticipants() {
+    const checkboxes = document.querySelectorAll('.participant-checkbox:checked');
+    if (checkboxes.length === 0) return;
+
+    if (!confirm(`确定要删除选中的 ${checkboxes.length} 人吗？`)) return;
+
+    // 收集要删除的索引（从大到小排序，避免删除时索引变化）
+    const indices = Array.from(checkboxes)
+        .map(cb => parseInt(cb.dataset.index))
+        .sort((a, b) => b - a);
+
+    indices.forEach(index => {
+        currentActivity.participants.splice(index, 1);
+    });
+
+    updateParticipantCount();
+    renderParticipantList();
 }
 
 function addParticipant() {
