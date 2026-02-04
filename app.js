@@ -965,7 +965,7 @@ function stopDraw() {
 
         // 更新已中奖名单汇总
         renderLotteryWinnersSummary();
-    }, 500);
+    }, 3000); // 中奖名单展示3秒
 }
 
 function saveWinners() {
