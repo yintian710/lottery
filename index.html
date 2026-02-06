@@ -174,9 +174,9 @@
                     <button class="btn btn-primary btn-large" id="draw-all-btn" onclick="drawAll()" disabled>抽全部</button>
                     <div class="draw-custom">
                         <span>抽</span>
-                        <input type="number" id="draw-custom-count" min="1" value="1" disabled>
+                        <input type="number" id="draw-custom-count" min="1" value="1" oninput="updateCustomDrawButton()" onchange="updateCustomDrawButton()" disabled>
                         <span>个</span>
-                        <button class="btn btn-success btn-large" id="draw-custom-btn" onclick="drawCustom()" disabled>开始</button>
+                        <button class="btn btn-success btn-large" id="draw-custom-btn" onclick="drawCustom()" disabled>抽 1 个</button>
                     </div>
                     <button class="btn btn-secondary btn-large" id="draw-one-btn" onclick="drawOne()" disabled>抽一个</button>
                     <button class="btn btn-danger btn-large" id="stop-btn" onclick="stopDraw()" style="display: none;">停止</button>

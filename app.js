@@ -749,6 +749,19 @@ function enterLotteryPage() {
     document.getElementById('winners-display').style.display = 'none';
     document.getElementById('draw-all-btn').disabled = true;
     document.getElementById('draw-one-btn').disabled = true;
+    document.getElementById('draw-custom-count').disabled = true;
+    document.getElementById('draw-custom-btn').disabled = true;
+    updateCustomDrawButton();
+
+    const firstAvailablePrizeIndex = currentActivity.prizes.findIndex((prize) => {
+        const won = (currentActivity.winners[prize.id] || []).length;
+        return prize.count - won > 0;
+    });
+
+    if (firstAvailablePrizeIndex >= 0) {
+        select.value = String(firstAvailablePrizeIndex);
+        selectPrize();
+    }
 
     // 渲染已中奖名单汇总
     renderLotteryWinnersSummary();
@@ -804,6 +817,7 @@ function selectPrize() {
         document.getElementById('draw-one-btn').disabled = true;
         customInput.disabled = true;
         customBtn.disabled = true;
+        updateCustomDrawButton();
         return;
     }
 
@@ -840,6 +854,17 @@ function selectPrize() {
     customBtn.disabled = !canDraw;
     customInput.max = maxDraw;
     customInput.value = Math.min(parseInt(customInput.value) || 1, maxDraw);
+    updateCustomDrawButton();
+}
+
+function updateCustomDrawButton() {
+    const customInput = document.getElementById('draw-custom-count');
+    const customBtn = document.getElementById('draw-custom-btn');
+    if (!customInput || !customBtn) return;
+
+    const value = Math.max(1, parseInt(customInput.value, 10) || 1);
+    customInput.value = value;
+    customBtn.textContent = `抽 ${value} 个`;
 }
 
 function clearNameSlots() {
