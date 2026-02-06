@@ -1,18 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #fb923c 100%);
-    --glass-bg: rgba(255, 255, 255, 0.16);
-    --glass-bg-strong: rgba(255, 255, 255, 0.24);
-    --glass-border: rgba(255, 255, 255, 0.24);
-    --glass-border-strong: rgba(255, 255, 255, 0.32);
-    --shadow-soft: 0 18px 50px rgba(8, 24, 48, 0.3);
-    --shadow-bright: 0 18px 50px rgba(34, 211, 238, 0.2);
-    --text-primary: rgba(255, 255, 255, 0.95);
-    --text-muted: rgba(255, 255, 255, 0.72);
-    --text-faint: rgba(255, 255, 255, 0.55);
-    --radius-lg: 16px;
-    --radius-md: 12px;
+    --bg-main: linear-gradient(160deg, #fde7f4 0%, #fff4d6 28%, #e8fbec 55%, #eee9ff 78%, #fff0dc 100%);
+    --bg-float: linear-gradient(145deg, rgba(244, 184, 255, 0.4), rgba(255, 222, 147, 0.38), rgba(177, 244, 197, 0.34));
+    --card-pink: linear-gradient(to-br, rgba(253, 205, 232, 0.92), rgba(244, 171, 212, 0.88));
+    --card-cream: linear-gradient(to-b, rgba(255, 240, 203, 0.92), rgba(255, 228, 170, 0.88));
+    --card-mint: linear-gradient(to-br, rgba(205, 246, 216, 0.9), rgba(162, 229, 184, 0.86));
+    --card-purple: linear-gradient(to-br, rgba(226, 214, 255, 0.92), rgba(204, 188, 255, 0.88));
+    --card-lemon: linear-gradient(to-br, rgba(252, 246, 194, 0.9), rgba(245, 233, 156, 0.86));
+    --text-main: #884a9f;
+    --text-soft: #9a6db0;
+    --text-strong: #b0488b;
+    --text-mint: #2f8f67;
+    --text-lemon: #a38322;
+    --border-soft: rgba(255, 255, 255, 0.72);
+    --radius-giant: 36px;
+    --radius-xl: 32px;
+    --radius-lg: 28px;
+    --radius-md: 24px;
+    --radius-pill: 999px;
+    --clay-raised: 8px 8px 16px rgba(0, 0, 0, 0.1), inset 4px 4px 8px rgba(255, 255, 255, 0.4), inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+    --clay-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+    --clay-soft: 5px 5px 10px rgba(0, 0, 0, 0.07), inset 3px 3px 6px rgba(255, 255, 255, 0.45), inset -1px -1px 3px rgba(0, 0, 0, 0.08);
+    --panel-soft: linear-gradient(to-b, rgba(255, 252, 245, 0.72), rgba(255, 242, 249, 0.64));
 }
 
 * {
@@ -22,10 +32,10 @@
 }
 
 body {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg-main);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     min-height: 100vh;
-    color: var(--text-primary);
+    background: var(--bg-main);
+    color: var(--text-main);
     overflow-x: hidden;
 }
 
@@ -33,36 +43,34 @@ body::before,
 body::after {
     content: '';
     position: fixed;
-    inset: -20%;
+    inset: -15%;
     z-index: -2;
-    background:
-        radial-gradient(circle at 15% 20%, rgba(168, 85, 247, 0.45), transparent 40%),
-        radial-gradient(circle at 85% 10%, rgba(236, 72, 153, 0.4), transparent 45%),
-        radial-gradient(circle at 70% 80%, rgba(251, 146, 60, 0.35), transparent 55%);
-    filter: blur(60px);
+    background: var(--bg-float);
+    filter: blur(58px);
     opacity: 0.9;
 }
 
 body::after {
-    inset: -30%;
     background:
-        radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.3), transparent 45%),
-        radial-gradient(circle at 90% 60%, rgba(249, 115, 22, 0.35), transparent 50%);
-    filter: blur(90px);
-    opacity: 0.75;
+        radial-gradient(circle at 20% 28%, rgba(245, 184, 226, 0.62), transparent 48%),
+        radial-gradient(circle at 82% 26%, rgba(255, 229, 166, 0.58), transparent 50%),
+        radial-gradient(circle at 68% 80%, rgba(189, 237, 198, 0.58), transparent 52%),
+        radial-gradient(circle at 24% 78%, rgba(215, 202, 255, 0.56), transparent 54%);
+    filter: blur(70px);
+    opacity: 0.85;
 }
 
 #app {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 28px 20px 40px;
+    padding: 30px 20px 40px;
     position: relative;
-    z-index: 0;
+    z-index: 1;
 }
 
 .page {
     display: none;
-    animation: pageIn 0.4s ease both;
+    animation: pageIn 0.35s ease both;
 }
 
 .page.active {
@@ -72,7 +80,7 @@ body::after {
 @keyframes pageIn {
     from {
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(14px);
     }
     to {
         opacity: 1;
@@ -83,233 +91,224 @@ body::after {
 .header {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
     margin-bottom: 26px;
-    padding: 16px 20px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    background: var(--glass-bg);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    padding: 18px 22px;
+    border-radius: var(--radius-xl);
+    background: var(--card-purple);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--clay-raised);
 }
 
 .header h1 {
-    font-family: 'Fraunces', 'Space Grotesk', sans-serif;
-    font-size: 28px;
-    letter-spacing: 0.5px;
-    color: var(--text-primary);
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 32px;
+    line-height: 1.1;
+    color: var(--text-strong);
+    letter-spacing: 0.4px;
 }
 
 .btn {
-    padding: 12px 24px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    background: var(--glass-bg);
-    color: var(--text-primary);
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+    padding: 12px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: var(--radius-lg);
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    box-shadow: var(--clay-raised);
+    background: var(--card-cream);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(4px);
+    filter: saturate(1.08);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(5px) scale(0.995);
 }
 
 .btn:disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, rgba(34, 211, 238, 0.45), rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.3));
-    border-color: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 18px 40px rgba(34, 211, 238, 0.25);
-}
-
-.btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 50px rgba(34, 211, 238, 0.35);
+    background: var(--card-pink);
+    color: #bc4f8f;
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: var(--glass-border);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.22);
-    transform: translateY(-2px);
+    background: var(--card-cream);
+    color: #b57b28;
 }
 
 .btn-success {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(52, 211, 153, 0.3));
-    border-color: rgba(255, 255, 255, 0.32);
-    box-shadow: 0 16px 36px rgba(16, 185, 129, 0.25);
-}
-
-.btn-success:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 45px rgba(16, 185, 129, 0.35);
+    background: var(--card-mint);
+    color: var(--text-mint);
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, rgba(248, 113, 113, 0.45), rgba(244, 63, 94, 0.3));
-    border-color: rgba(255, 255, 255, 0.32);
-    box-shadow: 0 16px 36px rgba(248, 113, 113, 0.25);
-}
-
-.btn-danger:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 45px rgba(248, 113, 113, 0.35);
+    background: linear-gradient(to-br, rgba(255, 209, 188, 0.92), rgba(255, 174, 192, 0.88));
+    color: #bc5e78;
 }
 
 .btn-back {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: var(--glass-border);
-    color: var(--text-primary);
-    padding: 8px 16px;
-}
-
-.btn-back:hover {
-    background: rgba(255, 255, 255, 0.22);
+    padding: 10px 18px;
+    background: var(--card-lemon);
+    color: var(--text-lemon);
 }
 
 .btn-large {
     padding: 16px 38px;
     font-size: 20px;
+    border-radius: var(--radius-xl);
 }
 
 .btn-small {
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-size: 14px;
+    border-radius: var(--radius-md);
+}
+
+.actions,
+.form-actions,
+.participant-actions,
+.winners-actions,
+.activity-card-actions,
+.modal-actions,
+.lottery-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .actions {
-    display: flex;
-    gap: 15px;
     margin-bottom: 30px;
-    flex-wrap: wrap;
 }
 
-.activity-list {
+.activity-list,
+.all-winners-list,
+.winners-container,
+.edit-container {
     display: grid;
-    gap: 20px;
+    gap: 16px;
+}
+
+.activity-card,
+.form-section,
+.prize-winners,
+.lottery-winners-summary {
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--clay-raised);
 }
 
 .activity-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
+    background: var(--card-cream);
     padding: 20px;
-    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: var(--shadow-soft);
-}
-
-.activity-card:hover {
-    background: var(--glass-bg-strong);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-bright);
 }
 
 .activity-card h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: var(--text-primary);
+    color: var(--text-strong);
+    font-size: 22px;
+    margin-bottom: 12px;
 }
 
 .activity-card-info {
     display: flex;
-    gap: 20px;
-    margin-bottom: 15px;
-    color: var(--text-muted);
-    font-size: 14px;
-}
-
-.activity-card-actions {
-    display: flex;
-    gap: 10px;
     flex-wrap: wrap;
-}
-
-.edit-container {
-    display: grid;
-    gap: 30px;
+    gap: 18px;
+    color: var(--text-soft);
+    margin-bottom: 14px;
 }
 
 .form-section {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
+    background: linear-gradient(to-b, rgba(231, 220, 255, 0.92), rgba(214, 198, 255, 0.86));
     padding: 22px;
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
 }
 
 .form-section h2 {
-    font-size: 18px;
-    margin-bottom: 20px;
-    color: var(--text-primary);
+    color: var(--text-strong);
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 24px;
+    margin-bottom: 16px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
+}
+
+.form-group label,
+.participant-count,
+.participant-toolbar,
+.draw-custom span,
+.empty-state,
+.empty-hint {
+    color: var(--text-soft);
 }
 
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: var(--text-muted);
+    font-weight: 600;
 }
 
-.form-group input[type="text"],
-.form-group input[type="number"] {
+input[type='text'],
+input[type='number'],
+select {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.84);
     border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.14);
-    color: var(--text-primary);
+    background: linear-gradient(to-b, rgba(255, 251, 240, 0.9), rgba(255, 240, 247, 0.84));
+    color: var(--text-main);
     font-size: 16px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.form-group input:focus {
+    box-shadow: var(--clay-inset);
     outline: none;
-    border-color: rgba(255, 255, 255, 0.45);
-    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
 }
 
-.checkbox-group label {
+input[type='text']:focus,
+input[type='number']:focus,
+select:focus {
+    border-color: rgba(255, 255, 255, 0.96);
+    background: linear-gradient(to-b, rgba(255, 255, 248, 0.95), rgba(255, 245, 251, 0.88));
+}
+
+input::placeholder {
+    color: rgba(155, 115, 176, 0.75);
+}
+
+.checkbox-group label,
+.checkbox-label,
+.participant-item .participant-left {
     display: flex;
     align-items: center;
     gap: 10px;
-    cursor: pointer;
 }
 
-.checkbox-group input[type="checkbox"] {
+input[type='checkbox'] {
     width: 20px;
     height: 20px;
-    accent-color: #22d3ee;
+    border-radius: var(--radius-pill);
+    accent-color: #f08bc4;
 }
 
 .prize-item {
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-lg);
-    padding: 15px;
-    margin-bottom: 15px;
+    background: var(--panel-soft);
+    padding: 18px;
     display: grid;
-    gap: 15px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    gap: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--clay-inset);
 }
 
 .prize-header {
@@ -319,52 +318,34 @@ body::after {
 }
 
 .prize-header h4 {
-    color: var(--text-primary);
+    color: var(--text-strong);
+    font-size: 20px;
 }
 
 .prize-fields {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+    gap: 12px;
 }
 
 .prize-image-preview {
-    width: 100px;
-    height: 100px;
+    width: 104px;
+    height: 104px;
     border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    box-shadow: var(--clay-soft);
     object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.25);
-}
-
-.participant-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-}
-
-.participant-count {
-    color: var(--text-muted);
-    font-size: 14px;
-}
-
-.form-actions {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
 }
 
 .modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.55), rgba(2, 6, 23, 0.7));
+    inset: 0;
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    background: linear-gradient(to-br, rgba(255, 226, 245, 0.62), rgba(255, 241, 194, 0.54), rgba(223, 248, 231, 0.58));
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
@@ -374,64 +355,79 @@ body::after {
 }
 
 .modal-content {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border-strong);
-    border-radius: 20px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
+    width: min(92%, 600px);
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-giant);
+    border: 1px solid var(--border-soft);
+    background: var(--card-purple);
+    box-shadow: var(--clay-raised);
+}
+
+.modal-large {
+    max-width: 760px;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     padding: 20px;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
 }
 
 .modal-header h2 {
-    color: var(--text-primary);
+    color: var(--text-strong);
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 28px;
 }
 
 .modal-close {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid var(--glass-border);
-    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: var(--card-pink);
+    color: #bf4f93;
     font-size: 24px;
-    cursor: pointer;
-    padding: 0 12px;
+    line-height: 1;
+    padding: 6px 14px;
     border-radius: var(--radius-md);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    box-shadow: var(--clay-raised);
+    transition: transform 0.2s ease;
+}
+
+.modal-close:hover {
+    transform: translateY(4px);
 }
 
 .modal-body {
     padding: 20px;
-    max-height: 60vh;
     overflow-y: auto;
 }
 
 .participant-input {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .participant-input input {
     flex: 1;
-    padding: 12px 16px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.14);
-    color: var(--text-primary);
-    font-size: 16px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+}
+
+.participant-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.58);
+}
+
+.participant-toolbar #selected-count {
+    color: rgba(168, 122, 186, 0.9);
 }
 
 .participant-list {
@@ -443,96 +439,55 @@ body::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.12);
+    gap: 10px;
+    padding: 10px 14px;
     border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    background: var(--panel-soft);
+    box-shadow: var(--clay-inset);
 }
 
 .participant-item.blacklisted {
-    opacity: 0.5;
+    opacity: 0.6;
     text-decoration: line-through;
-}
-
-.participant-item .participant-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.participant-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #22d3ee;
-    cursor: pointer;
-}
-
-.participant-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px 0;
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--glass-border);
-    color: var(--text-muted);
-}
-
-.participant-toolbar .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
-
-.participant-toolbar #selected-count {
-    color: var(--text-faint);
-    font-size: 14px;
-}
-
-.modal-large {
-    max-width: 700px;
 }
 
 .excel-sheet-selector {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
+    color: var(--text-soft);
 }
 
-.excel-sheet-selector select {
-    padding: 8px 16px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.14);
-    color: var(--text-primary);
-    font-size: 14px;
-    cursor: pointer;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+.excel-sheet-selector select option,
+.prize-selector select option {
+    color: var(--text-main);
+    background: #fff9ef;
 }
 
-.excel-sheet-selector select option {
-    background: rgba(15, 23, 42, 0.85);
+.excel-import-info,
+.excel-preview-list,
+.lottery-display,
+.draw-custom,
+.winners-display {
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: var(--radius-xl);
 }
 
 .excel-import-info {
+    background: var(--card-cream);
+    box-shadow: var(--clay-inset);
     padding: 12px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-md);
-    margin-bottom: 15px;
-    font-size: 14px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    margin-bottom: 14px;
+    color: var(--text-soft);
 }
 
 .excel-import-info .info-row {
     display: flex;
-    gap: 20px;
-    margin-bottom: 5px;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 6px;
 }
 
 .excel-import-info .info-row:last-child {
@@ -540,34 +495,35 @@ body::after {
 }
 
 .excel-import-info .warning {
-    color: rgba(251, 191, 36, 0.95);
+    color: #bf8f2e;
+    font-weight: 700;
 }
 
 .excel-import-info .success {
-    color: rgba(52, 211, 153, 0.95);
+    color: var(--text-mint);
+    font-weight: 700;
 }
 
 .excel-preview-list {
+    background: var(--card-lemon);
+    box-shadow: var(--clay-soft);
     max-height: 300px;
     overflow-y: auto;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-lg);
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    margin-bottom: 14px;
+    padding: 14px;
 }
 
 .excel-preview-list .preview-item {
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-md);
-    margin-bottom: 6px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: linear-gradient(to-b, rgba(255, 248, 224, 0.82), rgba(252, 239, 199, 0.76));
+    box-shadow: var(--clay-inset);
 }
 
 .excel-preview-list .preview-item:last-child {
@@ -575,68 +531,52 @@ body::after {
 }
 
 .excel-preview-list .preview-item.duplicate {
-    border: 1px solid rgba(251, 191, 36, 0.5);
-    background: rgba(251, 191, 36, 0.12);
+    background: linear-gradient(to-br, rgba(255, 236, 179, 0.9), rgba(255, 218, 166, 0.86));
 }
 
 .excel-preview-list .preview-item .dup-badge {
+    color: #c1842a;
     font-size: 12px;
-    color: rgba(251, 191, 36, 0.95);
-}
-
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
+    font-weight: 700;
 }
 
 .lottery-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 18px;
     padding: 24px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    border-radius: var(--radius-giant);
+    border: 1px solid var(--border-soft);
+    background: var(--card-mint);
+    box-shadow: var(--clay-raised);
 }
 
 .prize-selector {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 15px;
-    padding: 14px 22px;
-    background: var(--glass-bg);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: var(--shadow-soft);
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: var(--radius-xl);
+    background: var(--panel-soft);
+    border: 1px solid rgba(255, 255, 255, 0.76);
+    box-shadow: var(--clay-inset);
+}
+
+.prize-selector label {
+    color: var(--text-soft);
+    font-weight: 700;
 }
 
 .prize-selector select {
-    padding: 10px 20px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.14);
-    color: var(--text-primary);
-    font-size: 16px;
-    cursor: pointer;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.prize-selector select option {
-    background: rgba(15, 23, 42, 0.85);
-    color: var(--text-primary);
+    width: auto;
+    min-width: 220px;
 }
 
 #prize-remaining {
-    color: rgba(52, 211, 153, 0.95);
-    font-weight: 600;
+    color: var(--text-mint);
+    font-weight: 700;
 }
 
 .prize-display {
@@ -644,199 +584,157 @@ body::after {
 }
 
 .prize-image-container {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.12);
+    width: 208px;
+    height: 208px;
+    margin: 0 auto 18px;
+    padding: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: linear-gradient(to-b, rgba(232, 223, 255, 0.74), rgba(216, 199, 255, 0.66));
+    box-shadow: var(--clay-inset);
 }
 
 .prize-image-container img {
     max-width: 100%;
     max-height: 100%;
+    border-radius: var(--radius-lg);
     object-fit: contain;
 }
 
 #prize-name-display {
-    font-size: 32px;
-    color: var(--text-primary);
+    color: var(--text-strong);
+    font-size: 34px;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
 }
 
 .lottery-display {
     width: 100%;
-    max-width: 800px;
+    max-width: 840px;
     min-height: 150px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
-    padding: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    padding: 24px;
+    background: var(--panel-soft);
+    box-shadow: var(--clay-inset);
 }
 
 .lottery-names {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(var(--name-width, 120px), var(--name-width, 120px)));
-    justify-content: center;
-    gap: 15px;
     width: 100%;
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--text-primary);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--name-width, 130px), var(--name-width, 130px)));
+    justify-content: center;
+    gap: 12px;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-main);
 }
 
 .lottery-name {
-    padding: 12px 20px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.14));
-    border-radius: var(--radius-md);
+    padding: 12px 18px;
     text-align: center;
-    animation: pulse 0.08s infinite;
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    background: linear-gradient(to-b, rgba(254, 214, 236, 0.78), rgba(245, 186, 221, 0.7));
+    box-shadow: var(--clay-soft);
+    animation: pulse 0.1s infinite;
 }
 
 .lottery-name.winner {
-    animation: winner 0.6s ease;
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.35), rgba(245, 158, 11, 0.2));
-    box-shadow: 0 14px 30px rgba(251, 191, 36, 0.35);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: var(--card-lemon);
+    color: #b0811f;
+    animation: winner 0.65s ease;
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.02); opacity: 0.92; }
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.02);
+        opacity: 0.94;
+    }
 }
 
 @keyframes winner {
-    0% { transform: scale(1.1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-}
-
-.lottery-actions {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
+    0% {
+        transform: scale(1.08);
+    }
+    50% {
+        transform: scale(1.14);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .draw-custom {
-    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.14);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.draw-custom span {
-    font-size: 18px;
-    color: var(--text-muted);
+    padding: 8px 14px;
+    background: var(--panel-soft);
+    box-shadow: var(--clay-inset);
 }
 
 .draw-custom input {
-    width: 60px;
-    padding: 10px;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.16);
-    color: var(--text-primary);
-    font-size: 18px;
+    width: 70px;
     text-align: center;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .draw-custom input:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.draw-custom input:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.45);
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+    opacity: 0.56;
 }
 
 .winners-display {
-    text-align: center;
-    padding: 20px;
-    background: rgba(251, 191, 36, 0.14);
-    border: 1px solid rgba(251, 191, 36, 0.45);
-    border-radius: var(--radius-lg);
     width: 100%;
-    max-width: 600px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: var(--shadow-soft);
+    max-width: 620px;
+    padding: 18px;
+    text-align: center;
+    background: linear-gradient(to-b, rgba(255, 246, 201, 0.78), rgba(249, 232, 169, 0.7));
+    box-shadow: var(--clay-inset);
 }
 
-.winners-display h3 {
-    color: rgba(251, 191, 36, 0.95);
-    margin-bottom: 15px;
+.winners-display h3,
+.lottery-winners-summary h3 {
+    color: #b27e22;
+    margin-bottom: 12px;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
 }
 
 #current-winners {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
     justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-#current-winners span {
-    padding: 8px 16px;
-    background: rgba(251, 191, 36, 0.2);
-    color: rgba(255, 255, 255, 0.95);
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    border: 1px solid rgba(251, 191, 36, 0.4);
+#current-winners span,
+.lottery-winners-summary .winner-name,
+.winner-tag {
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: linear-gradient(to-b, rgba(254, 220, 240, 0.8), rgba(247, 198, 227, 0.74));
+    color: #b05289;
+    font-weight: 700;
+    box-shadow: var(--clay-soft);
 }
 
 .lottery-winners-summary {
     width: 100%;
-    max-width: 800px;
-    margin-top: 20px;
+    max-width: 840px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: var(--shadow-soft);
-}
-
-.lottery-winners-summary h3 {
-    color: rgba(251, 191, 36, 0.98);
-    margin-bottom: 15px;
-    font-size: 18px;
-    text-shadow: 0 6px 18px rgba(251, 191, 36, 0.35);
+    background: var(--card-cream);
 }
 
 .lottery-winners-summary .prize-winner-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    background: linear-gradient(to-b, rgba(255, 247, 206, 0.78), rgba(250, 233, 173, 0.7));
+    box-shadow: var(--clay-inset);
 }
 
 .lottery-winners-summary .prize-winner-group:last-child {
@@ -844,114 +742,63 @@ body::after {
 }
 
 .lottery-winners-summary .prize-winner-title {
-    color: rgba(253, 224, 71, 0.95);
-    font-size: 14px;
-    margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 8px;
+    color: #ac8026;
+    font-weight: 700;
 }
 
-.lottery-winners-summary .prize-winner-title img {
+.lottery-winners-summary .prize-winner-title img,
+.prize-winners h3 img {
     width: 24px;
     height: 24px;
-    border-radius: var(--radius-md);
     object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--clay-soft);
 }
 
-.lottery-winners-summary .winner-names {
+.lottery-winners-summary .winner-names,
+.winner-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-}
-
-.lottery-winners-summary .winner-name {
-    padding: 4px 12px;
-    background: rgba(251, 191, 36, 0.18);
-    border: 1px solid rgba(251, 191, 36, 0.6);
-    color: rgba(255, 255, 255, 0.98);
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 600;
-    text-shadow: 0 2px 10px rgba(251, 191, 36, 0.35);
-}
-
-.lottery-winners-summary .empty-hint {
-    color: var(--text-faint);
-    font-size: 14px;
-}
-
-.winners-container {
-    display: grid;
-    gap: 20px;
-}
-
-.winners-actions {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.all-winners-list {
-    display: grid;
-    gap: 20px;
 }
 
 .prize-winners {
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
+    background: var(--card-purple);
     padding: 20px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: var(--shadow-soft);
 }
 
 .prize-winners h3 {
-    color: var(--text-primary);
-    margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--text-strong);
+    margin-bottom: 12px;
+    font-size: 22px;
 }
 
 .prize-winners h3 img {
     width: 40px;
     height: 40px;
-    border-radius: var(--radius-md);
-    object-fit: cover;
-}
-
-.winner-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.winner-tag {
-    padding: 8px 16px;
-    background: rgba(251, 191, 36, 0.18);
-    border: 1px solid rgba(251, 191, 36, 0.6);
-    color: rgba(255, 255, 255, 0.98);
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    text-shadow: 0 2px 10px rgba(251, 191, 36, 0.35);
 }
 
 .empty-state {
     text-align: center;
-    padding: 60px 20px;
-    color: var(--text-faint);
+    padding: 58px 20px;
 }
 
 .empty-state h3 {
-    margin-bottom: 10px;
-    color: var(--text-primary);
+    color: var(--text-strong);
+    font-size: 24px;
+    margin-bottom: 8px;
 }
 
 @media (max-width: 768px) {
     #app {
-        padding: 20px 16px 32px;
+        padding: 22px 14px 30px;
     }
 
     .header {
@@ -960,17 +807,27 @@ body::after {
     }
 
     .header h1 {
-        font-size: 22px;
+        font-size: 28px;
     }
 
     .btn {
-        padding: 10px 16px;
         font-size: 14px;
+        padding: 10px 16px;
+        border-radius: var(--radius-md);
     }
 
     .btn-large {
-        padding: 14px 26px;
-        font-size: 16px;
+        font-size: 18px;
+        padding: 14px 24px;
+        border-radius: var(--radius-lg);
+    }
+
+    .lottery-container,
+    .form-section,
+    .activity-card,
+    .prize-winners,
+    .lottery-winners-summary {
+        border-radius: var(--radius-xl);
     }
 
     .lottery-names {
@@ -979,5 +836,14 @@ body::after {
 
     .prize-fields {
         grid-template-columns: 1fr;
+    }
+
+    .participant-input {
+        flex-direction: column;
+    }
+
+    .prize-selector select {
+        min-width: 0;
+        width: 100%;
     }
 }
